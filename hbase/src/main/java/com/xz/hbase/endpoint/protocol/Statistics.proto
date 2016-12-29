@@ -1,0 +1,42 @@
+option java_package = "com.xz.hbase.endpoint.protocol";
+option java_outer_classname = "StatisticsProto";
+option optimize_for = SPEED;
+
+//count结构请求
+message CountRequest {
+	//optional可选
+	optional string startKey = 1  ;
+	optional string endKey = 2  ;
+}
+//count结构响应
+message CountResponse {
+	//required必选
+	required int64 count = 1 [default = 0] ;
+}
+//rowkey数量
+service RowKeyCountService {
+	rpc getRowCount(CountRequest)
+	returns (CountResponse) ;
+}
+
+//keyvalue数量
+service KeyValueCountService {
+	rpc getkeyvalueCount(CountRequest)
+	returns (CountResponse) ;
+}
+
+// avg结构请求
+message AvgRequest {
+	required string startRowKey = 1  ;
+	required string endRowKey = 2  ;
+}
+//avg结构响应
+message AvgResponse {
+	required string num = 1 ;
+	required string sum = 2 ;
+}
+
+service AvgService {
+	rpc getResponse(AvgRequest)
+	returns (AvgResponse) ;
+}

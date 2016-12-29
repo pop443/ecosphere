@@ -1,0 +1,58 @@
+！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+不是所有电脑的protoc.exe 都可以生成。  部分RPC协议无法生成
+lenovo 32位 可以使用protocol buffer 2.5版本的protoc.exe
+thinkpad 64位 2.5与2.6 版本都无法编译全
+centos 64位 3.0版本无法编译全
+！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+
+A.依次执行
+	com.xz.init.TableInit
+	com.xz.init.TableTruncate
+	com.xz.init.DataInit
+B.部署
+
+1.打开cmd 进入当前路径
+2.protoc.exe --java_out=../../../../../../src Statistics.proto
+3.在当前目录中生成 StatisticsProto.java 这个是rpc接口协议
+4.里面有三个功能 
+	a.rowkey count
+	b.keyvalue count
+	c.keyvalue 值得平均值
+5.部署 打Jar包 名为 demo.jar 包括
+	com.xz.hbase.endpoint.endpoint.AvgKeyValueEndPoint
+	com.xz.hbase.endpoint.endpoint.KeyValueCountEndPoint
+	com.xz.hbase.endpoint.endpoint.RowKeyCountEndPoint
+	com.xz.hbase.endpoint.protocol.StatisticsProto
+	4个文件
+6.上传到hdfs 
+hdfs dfs -mkdir /coprocessor
+hdfs dfs -mkdir /coprocessor/endpoint
+hdfs dfs -put /hadoop/hbase/demo.jar /coprocessor/endpoint
+在hdfs上删除
+hdfs dfs -rm -r hdfs://vggapp29:8020/coprocessor/endpoint/demo.jar
+7.进入 hbase shell
+	添加
+	disable 'hbase'
+	alter 'hbase' , METHOD=>'table_att','coprocessor'=>'hdfs://vggapp29:8020/coprocessor/endpoint/demo.jar|com.xz.hbase.AvgKeyValueImpl||'
+	alter 'hbase' , METHOD=>'table_att','coprocessor'=>'hdfs://vggapp29:8020/coprocessor/endpoint/demo.jar|com.xz.hbase.KeyValueCountImpl||'
+	alter 'hbase' , METHOD=>'table_att','coprocessor'=>'hdfs://vggapp29:8020/coprocessor/endpoint/demo.jar|com.xz.hbase.RowKeyCountImpl||'
+	enable 'hbase'
+	
+	删除
+	disable 'hbase'
+	alter 'hbase',METHOD=>'table_att_unset',NAME=>'coprocessor$1'
+	alter 'hbase',METHOD=>'table_att_unset',NAME=>'coprocessor$2'
+	alter 'hbase',METHOD=>'table_att_unset',NAME=>'coprocessor$3'
+	enable 'hbase'
+	
+	修改发布 需要重启hbase
+
+
+
+C.依次执行
+	com.xz.hbase.endpoint.client.Avgclient
+	com.xz.hbase.endpoint.client.KeyValueCountClient
+	com.xz.hbase.endpoint.client.RowCountClient
+	
+	
+D.执行 com.xz.init.TableSplit 再执行C

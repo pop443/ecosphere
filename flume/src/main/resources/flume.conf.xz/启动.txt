@@ -1,0 +1,16 @@
+停止
+kill -9 `jps -l | grep org.apache.flume.node.Application | awk '{print $1}'`
+
+# /hadoop/flume/flume-1.6.0/bin/flume-ng agent 
+#-f //hadoop/flume/flume-1.6.0/conf/xz/demo1.properties 
+#-n demo1 
+#-Dflume.log.dir=/hadoop/flume/flume-1.6.0/logs/ 
+#-Dflume.log.file=app.log 2>&1 &
+
+
+#demo1
+/hadoop/flume/flume-1.6.0/bin/flume-ng agent --conf /hadoop/flume/flume-1.6.0/conf/ --conf-file /hadoop/flume/flume-1.6.0/conf/xz/demo1.properties -n demo1
+
+#demo2
+/hadoop/flume/flume-1.6.0/bin/flume-ng agent --conf /hadoop/flume/flume-1.6.0/conf/ --conf-file /hadoop/flume/flume-1.6.0/conf/xz/demo2.properties -n demo2
+

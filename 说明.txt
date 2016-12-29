@@ -1,0 +1,12 @@
+包括
+hadoop2.6
+hbase1.2
+kafka0.9.2
+zookeeper3.4.5
+hive1.1.0
+flume1.6
+
+
+jar包
+1.组件 hdfs mapreduce yarn kafka hbase zookeeper hive flume
+2.自定义jar包
