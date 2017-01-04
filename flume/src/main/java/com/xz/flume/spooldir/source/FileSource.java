@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.xz.flume.spooldir.counter.FileCounter;
 import com.xz.flume.spooldir.source.plat.BaseSource;
 import com.xz.flume.spooldir.source.task.MarkFileTask;
 import com.xz.flume.spooldir.source.task.MoveFileTask;
@@ -23,6 +24,7 @@ public class FileSource extends BaseSource {
 	private ScanFolderTask scanFolderTask;
 	private MarkFileTask markFileTask ;
 	private MoveFileTask moveFileTask ;
+	private FileCounter fileCounter ;
 
 	@Override
 	public void configure(Context context) {
@@ -70,6 +72,7 @@ public class FileSource extends BaseSource {
 	@Override
 	public synchronized void start() {
 		super.start();
+		fileCounter.start();
 		//10s 执行一次持久化
 		executor.scheduleWithFixedDelay(markFileTask,0,10, TimeUnit.SECONDS) ;
 		//2s 执行一次读取主文件
@@ -81,6 +84,7 @@ public class FileSource extends BaseSource {
 	@Override
 	public synchronized void stop() {
 		super.stop();
+		fileCounter.stop();
 	}
 
 	@Override
