@@ -1,7 +1,7 @@
-package com.xz.flume.spooldir.source.plat;
+package com.xz.flume.files.source.plat;
 
 import com.google.common.collect.ImmutableMap;
-import com.xz.flume.spooldir.source.file.FileCenter;
+import com.xz.flume.files.source.file.FileCenter;
 import org.apache.flume.Context;
 import org.apache.flume.PollableSource;
 import org.apache.flume.conf.Configurable;

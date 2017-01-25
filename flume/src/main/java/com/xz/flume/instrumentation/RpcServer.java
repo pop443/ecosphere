@@ -1,4 +1,4 @@
-package com.xz.flume.spooldir.instrumentation;
+package com.xz.flume.instrumentation;
 
 import org.apache.flume.Context;
 import org.apache.flume.instrumentation.MonitorService;

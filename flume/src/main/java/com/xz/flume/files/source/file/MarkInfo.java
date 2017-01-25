@@ -1,4 +1,4 @@
-package com.xz.flume.spooldir.source.file;
+package com.xz.flume.files.source.file;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;

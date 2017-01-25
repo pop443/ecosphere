@@ -1,7 +1,7 @@
-package com.xz.flume.spooldir.source.task;
+package com.xz.flume.files.source.task;
 
-import com.xz.flume.spooldir.source.file.MarkInfo;
-import com.xz.flume.spooldir.source.file.FileCenter;
+import com.xz.flume.files.source.file.MarkInfo;
+import com.xz.flume.files.source.file.FileCenter;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;

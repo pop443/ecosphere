@@ -1,4 +1,4 @@
-package com.xz.flume.spooldir.source;
+package com.xz.flume.files.source;
 
 /**
  * falcon -- 2016/11/29.

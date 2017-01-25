@@ -1,8 +1,8 @@
-package com.xz.flume.spooldir.source.task;
+package com.xz.flume.files.source.task;
 
-import com.xz.flume.spooldir.source.file.FileInfo;
-import com.xz.flume.spooldir.source.file.FileCenter;
-import com.xz.flume.spooldir.source.utils.FileUtil;
+import com.xz.flume.files.source.file.FileInfo;
+import com.xz.flume.files.source.file.FileCenter;
+import com.xz.flume.files.source.utils.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

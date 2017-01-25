@@ -1,4 +1,4 @@
-package com.xz.flume.spooldir.source.file;
+package com.xz.flume.files.source.file;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

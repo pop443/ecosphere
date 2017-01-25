@@ -1,21 +1,21 @@
-package com.xz.flume.spooldir.source;
+package com.xz.flume.files.source;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import com.xz.flume.spooldir.counter.FileCounter;
-import com.xz.flume.spooldir.source.plat.BaseSource;
-import com.xz.flume.spooldir.source.task.MarkFileTask;
-import com.xz.flume.spooldir.source.task.MoveFileTask;
-import com.xz.flume.spooldir.source.task.ScanFolderTask;
-import com.xz.flume.spooldir.source.utils.FileUtil;
+import com.xz.flume.files.counter.FileCounter;
+import com.xz.flume.files.source.plat.BaseSource;
+import com.xz.flume.files.source.task.MarkFileTask;
+import com.xz.flume.files.source.task.MoveFileTask;
+import com.xz.flume.files.source.task.ScanFolderTask;
+import com.xz.flume.files.source.utils.FileUtil;
 import org.apache.flume.Context;
 import org.apache.flume.Event;
 import org.apache.flume.EventDeliveryException;
 
-import com.xz.flume.spooldir.source.file.FileReaderUtil;
+import com.xz.flume.files.source.file.FileReaderUtil;
 import org.apache.flume.FlumeException;
 
 public class FileSource extends BaseSource {

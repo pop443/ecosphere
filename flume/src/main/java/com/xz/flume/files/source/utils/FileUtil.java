@@ -1,7 +1,6 @@
-package com.xz.flume.spooldir.source.utils;
+package com.xz.flume.files.source.utils;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.flume.FlumeException;
 
 import java.io.File;
 import java.io.IOException;

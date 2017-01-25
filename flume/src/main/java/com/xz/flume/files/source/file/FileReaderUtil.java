@@ -1,4 +1,4 @@
-package com.xz.flume.spooldir.source.file;
+package com.xz.flume.files.source.file;
 
 import java.io.IOException;
 import java.util.*;

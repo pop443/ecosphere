@@ -1,4 +1,4 @@
-package com.xz.flume.spooldir.counter;
+package com.xz.flume.files.counter;
 
 import org.apache.flume.instrumentation.SourceCounter;
 
