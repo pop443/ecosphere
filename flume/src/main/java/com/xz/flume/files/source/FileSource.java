@@ -19,11 +19,15 @@ import com.xz.flume.files.source.file.FileReaderUtil;
 import org.apache.flume.FlumeException;
 
 public class FileSource extends BaseSource {
-
+	/** source名称 */
 	private String sourceName;
+	/** 扫描文件线程 */
 	private ScanFolderTask scanFolderTask;
+	/** 持久化文件线程 */
 	private MarkFileTask markFileTask ;
+	/** 迁移文件线程 */
 	private MoveFileTask moveFileTask ;
+	/** 统计 */
 	private FileCounter fileCounter ;
 
 	@Override
@@ -39,9 +43,11 @@ public class FileSource extends BaseSource {
 		validate(read);
 		//验证主路径下的 各个功能路径
 		initDir(metaPath,movePath) ;
-
+		//初始化各个线程
+		//文件扫描线程参数
+		String fileEnd = globalContext.get("fileEnd") ;
+		scanFolderTask = new ScanFolderTask(read, fileCenter,fileEnd) ;
 		markFileTask = new MarkFileTask(metaPath,fileCenter) ;
-		scanFolderTask = new ScanFolderTask(read, fileCenter,markFileTask.getMap()) ;
 		moveFileTask = new MoveFileTask(movePath,fileCenter) ;
 
 	}

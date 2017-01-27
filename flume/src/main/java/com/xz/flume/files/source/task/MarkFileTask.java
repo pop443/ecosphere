@@ -1,19 +1,14 @@
 package com.xz.flume.files.source.task;
 
-import com.xz.flume.files.source.file.MarkInfo;
+import com.xz.flume.filefilter.EndWithFileFilter;
 import com.xz.flume.files.source.file.FileCenter;
-import org.apache.commons.io.FileUtils;
+import com.xz.flume.files.source.file.MarkInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
-import java.util.regex.Pattern;
 
 /**
  * falcon -- 2016/11/26.
@@ -23,11 +18,10 @@ import java.util.regex.Pattern;
 public class MarkFileTask implements Runnable{
 
     private static final Logger logger = LoggerFactory.getLogger(MarkFileTask.class);
-
-    private File file;
+    private String metaParentPath;
     private FileCenter fileCenter ;
-    private Map<String, MarkInfo> map ;
-    private Pattern pattern ;
+    /** 内存中的持久化数据 */
+    private static Map<String, MarkInfo> markFilemap = new HashMap<>() ;
 
     /**
      *
@@ -35,68 +29,29 @@ public class MarkFileTask implements Runnable{
      * @param fileCenter
      */
     public MarkFileTask(String path, FileCenter fileCenter) {
-        file = new File(path + "/mark.xz");
+        metaParentPath = path ;
         this.fileCenter = fileCenter;
-        this.map = new HashMap<>() ;
-        this.pattern = Pattern.compile(":") ;
-
-        try {
-            if (!file.exists()){
-                FileUtils.touch(file);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         readFileMarkInfo();
-        if (logger.isDebugEnabled()) {
-            logger.debug("Markpath--" + path + "/mark.xz");
-        }
     }
 
     /**
      * 读取持久化文件
      */
     private void readFileMarkInfo() {
-        Properties properties = new Properties();
-        try {
-            InputStream inputStream = new FileInputStream(file);
-            properties.load(inputStream);
-            for (Map.Entry<Object, Object> entry : properties.entrySet()) {
-                String path = (String) entry.getKey();
-                String other = (String) entry.getValue();
-                String[] infos = pattern.split(other);
-                int num = 0;
-                long offset = 0;
-                try {
-                    num = Integer.parseInt(infos[0]);
-                    offset = Long.parseLong(infos[1]);
-                } catch (NumberFormatException e) {
-                    logger.error("init markinfo false--" + e.getMessage());
-                }
-                MarkInfo info = new MarkInfo(path,num,offset);
-                map.put(path, info);
-            }
-            inputStream.close();
-            inputStream = null;
-        } catch (IOException e) {
-            e.printStackTrace();
+        File metaFile = new File(metaParentPath) ;
+        File[] files = metaFile.listFiles(new EndWithFileFilter(".meta")) ;
+        for (File file:files){
+            MarkInfo markInfo = new MarkInfo(file) ;
+            markFilemap.put(markInfo.getSrcPath(),markInfo) ;
         }
     }
 
     private void writeFileMarkInfo() {
-        try {
-            String markinfos = fileCenter.getMarkFile();
-            FileUtils.write(file, markinfos);
-            if (logger.isDebugEnabled()) {
-                logger.debug("writeFileMarkInfo--" + markinfos);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        fileCenter.markFile();
     }
 
-    public Map<String, MarkInfo> getMap() {
-        return map;
+    public static Map<String, MarkInfo> getMarkFilemap() {
+        return markFilemap;
     }
 
     @Override

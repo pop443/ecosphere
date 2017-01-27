@@ -23,16 +23,14 @@ public abstract class BaseSource extends AbstractSource implements Configurable,
     @Override
     public void configure(Context context) {
         executor = Executors.newScheduledThreadPool(5);
-        fileCenter = FileCenter.newInstance() ;
         globalContext = new HashMap<>() ;
         ImmutableMap<String, String> map = context.getParameters();
-        Iterator<Map.Entry<String, String>> it = map.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String, String> entry = it.next();
+        for (Map.Entry<String, String> entry : map.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
-            globalContext.put(key,value) ;
+            globalContext.put(key, value);
         }
+        fileCenter = FileCenter.newInstance(globalContext) ;
 
     }
 

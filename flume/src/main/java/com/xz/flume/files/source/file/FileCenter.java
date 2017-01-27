@@ -1,94 +1,131 @@
 package com.xz.flume.files.source.file;
 
+import com.xz.flume.files.source.task.MarkFileTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class FileCenter {
 
-	private static final Logger logger = LoggerFactory.getLogger(FileCenter.class);
-	private static FileCenter fileCenter = new FileCenter() ;
-	private static Map<String,FileInfo> map ;
+    private static final Logger logger = LoggerFactory.getLogger(FileCenter.class);
+    private static FileCenter fileCenter = new FileCenter();
+    private static Map<String,String> globalContext = null ;
+    private Map<String, FileInfo> map = new HashMap<>();
+    private List<FileInfo> list = new ArrayList<>();
+    private Lock lock = new ReentrantLock();
 
-	private FileCenter(){
+    private FileCenter() {
 
-	}
-	public static FileCenter newInstance() {
-		map = new ConcurrentHashMap<>() ;
-		return fileCenter;
-	}
+    }
 
-	/**
-	 * 注册文件
-	 *
-	 */
-	public void registe(List<File> list, Map<String, MarkInfo> markInfoMap) {
-			for (File file : list) {
-				String absolutePath = file.getAbsolutePath() ;
-				if (map.containsKey(absolutePath)) {
-					continue ;
-				}
-				FileInfo fileInfo = null ;
-				if (markInfoMap.containsKey(absolutePath)) {
-					//有文件的元数据 赋值
-					fileInfo = new FileInfo(file.getName(), absolutePath,file.getParent(), file,markInfoMap.get(absolutePath));
-				}else{
-					fileInfo = new FileInfo(file.getName(), absolutePath,file.getParent(), file,new MarkInfo(absolutePath)) ;
-				}
-				map.put(absolutePath, fileInfo);
-				if (logger.isDebugEnabled()) {
-					logger.debug("registe"+absolutePath+"--"+fileInfo.getMarkInfo().toString());
-				}
-			}
-	}
+    public static FileCenter newInstance(Map<String,String> globalContext) {
+        FileCenter.setGlobalContext(globalContext) ;
+        return fileCenter;
+    }
 
-	/**
-	 * 返回fileinfo对象与一行日志 的map集合
-	 * @return
-	 */
-	public Map<FileInfo, String> readLine() {
-			Map<FileInfo, String> ret = new HashMap<>();
-			for (FileInfo fileInfo : map.values()) {
-				ret.put(fileInfo, fileInfo.readLine());
-			}
-			return ret;
-	}
+    private static void setGlobalContext(Map<String, String> globalContext) {
+        FileCenter.globalContext = globalContext;
+    }
 
-	public String getMarkFile(){
-		StringBuffer sb = new StringBuffer() ;
-		for (FileInfo fileInfo : map.values()) {
-			sb.append(fileInfo.getMarkInfo().toString()).append("\r\n") ;
-		}
-		return sb.toString() ;
-	}
-
-	/**
-	 * 从全局map中删除fileinfo 并返回删除的fileinfo对象搬迁文件
-	 * @param list
-	 * @param timeLimit
+    /**
+     * 注册文件
      */
-	public void moveFile(List<FileInfo> list,long timeLimit){
-		long now = System.currentTimeMillis() ;
-		System.out.println("--------------");
-		for (FileInfo fileInfo : map.values()) {
-			System.out.println(now+"--"+fileInfo.getModifyTime()+"--"+timeLimit);
-			//超时
-			if (now-fileInfo.getModifyTime()>timeLimit){
+    public void registe(File[] files) {
+        for (File file : files) {
+            String absolutePath = file.getAbsolutePath();
+            lock.lock();
+            try {
+                //内存中是否有这个文件 如果有则已经处理
+                if (map.containsKey(absolutePath)) {
+                    continue;
+                }
+                //读取迁移文件 如果迁移文件存在 则存在同名文件 认为处理过 不管
+                String metaFileMeta = globalContext.get("read")+"/"+globalContext.get("meta")+"/"+file.getName() ;
+                File metaFile = new File(metaFileMeta) ;
+                if (metaFile.exists()){
+                    if (logger.isDebugEnabled()) {
+                        logger.debug(absolutePath +" has been dealed!!");
+                    }
+                    continue;
+                }
+                //生成fileInfo对象
+                MarkInfo markInfo = null ;
+                if (MarkFileTask.getMarkFilemap().containsKey(absolutePath)){
+                    markInfo = MarkFileTask.getMarkFilemap().get(absolutePath) ;
+                }else{
+                    markInfo = new MarkInfo(absolutePath,metaFileMeta) ;
+                }
+                FileInfo fileInfo = new FileInfo(file.getName(), absolutePath, file.getParent(), file, markInfo);
+                map.put(absolutePath, fileInfo);
+                list.add(fileInfo) ;
+                if (logger.isDebugEnabled()) {
+                    logger.debug("registe" + absolutePath + "--" + fileInfo.getMarkInfo().toString());
+                }
+            } finally {
+                lock.unlock();
+            }
+        }
+    }
 
-				//设置文件状态为关闭 释放连接
-				fileInfo.setState(FileInfo.FileInfoState.CLOSE);
-				fileInfo.release();
+    /**
+     * 返回fileinfo对象与一行日志 的map集合
+     *
+     * @return
+     */
+    public Map<FileInfo, String> readLine() {
+        Map<FileInfo, String> ret = new HashMap<>();
+        for (FileInfo fileInfo : map.values()) {
+            ret.put(fileInfo, fileInfo.readLine());
+        }
+        return ret;
+    }
 
-				map.remove(fileInfo.getAbsolutePath()) ;
-				list.add(fileInfo);
-			}
-		}
-		System.out.println("--------------");
-	}
+    public boolean markFile() {
+        boolean bo = false ;
+        lock.lock();
+        try{
+            for (FileInfo fileInfo:list){
+                fileInfo.mark();
+            }
+        }finally {
+            lock.unlock();
+        }
+        return bo;
+    }
+
+    /**
+     * 从全局map中删除fileinfo 并返回删除的fileinfo对象搬迁文件
+     *
+     * @param removelist
+     * @param timeLimit
+     */
+    public void moveFile(List<FileInfo> removelist, long timeLimit) {
+        long now = System.currentTimeMillis();
+        System.out.println("--------------");
+        for (FileInfo fileInfo : map.values()) {
+            System.out.println(now + "--" + fileInfo.getFile().lastModified() + "--" + timeLimit);
+            //超时
+            if (now - fileInfo.getFile().lastModified() > timeLimit) {
+
+                //设置文件状态为关闭 释放连接
+                fileInfo.setState(FileInfo.FileInfoState.CLOSE);
+                fileInfo.release();
+
+                map.remove(fileInfo.getAbsolutePath());
+                list.remove(fileInfo) ;
+
+                removelist.add(fileInfo);
+            }
+        }
+        System.out.println("--------------");
+    }
 
 }

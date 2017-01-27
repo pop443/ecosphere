@@ -14,8 +14,9 @@ public class FileInfo {
 	/** 父路径 */
 	private String parentPath ;
 	private File file;
+	/** 创建时间 */
 	private long createTime;
-	private long modifyTime;
+	/** 修改时间 */
 	private LineNumberReader lineNumberReader;
 	private MarkInfo markInfo;
 	private FileInfoState state;
@@ -25,9 +26,7 @@ public class FileInfo {
 		this.absolutePath = absolutePath;
 		this.parentPath = parentPath;
 		this.file = file;
-		long currentTime = System.currentTimeMillis() ;
-		this.createTime = currentTime;
-		modifyTime = currentTime ;
+		this.createTime = System.currentTimeMillis() ;
 		try {
 			lineNumberReader = new LineNumberReader(new InputStreamReader(new FileInputStream(absolutePath), "utf-8"));
 		} catch (UnsupportedEncodingException e) {
@@ -55,7 +54,6 @@ public class FileInfo {
 				|| state == FileInfoState.NORMAL_NOMARK) {
 			try {
 				line = lineNumberReader.readLine() ;
-				modifyTime = System.currentTimeMillis() ;
 			} catch (IOException e) {
 				state = FileInfoState.EXCEPTION ;
 			}
@@ -84,6 +82,10 @@ public class FileInfo {
 		}
 	}
 
+	public boolean mark() {
+		return markInfo.mark() ;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -100,9 +102,6 @@ public class FileInfo {
 		return markInfo;
 	}
 
-	public long getModifyTime() {
-		return modifyTime;
-	}
 
 	public File getFile() {
 		return file;

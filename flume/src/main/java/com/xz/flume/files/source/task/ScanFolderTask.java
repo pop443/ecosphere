@@ -1,5 +1,6 @@
 package com.xz.flume.files.source.task;
 
+import com.xz.flume.filefilter.EndWithFileFilter;
 import com.xz.flume.files.source.file.MarkInfo;
 import com.xz.flume.files.source.file.FileCenter;
 import org.apache.commons.io.FileUtils;
@@ -18,15 +19,15 @@ import java.util.Map;
 public class ScanFolderTask implements Runnable{
 
     private static final Logger logger = LoggerFactory.getLogger(ScanFolderTask.class);
-
+    /** 父文件夹 */
     private File parentFile;
     private FileCenter fileCenter;
-    private Map<String, MarkInfo> markMap ;
+    private String fileEnd ;
 
-    public ScanFolderTask(String parentPath, FileCenter fileCenter, Map<String, MarkInfo> markMap) {
+    public ScanFolderTask(String parentPath, FileCenter fileCenter,String fileEnd) {
         this.parentFile = new File(parentPath);
         this.fileCenter = fileCenter;
-        this.markMap = markMap;
+        this.fileEnd = fileEnd ;
     }
 
     @Override
@@ -35,9 +36,8 @@ public class ScanFolderTask implements Runnable{
             logger.debug("--ScanFolderTask start--");
         }
         // 获取文件夹 下的文件
-        IOFileFilter fileFilter = FileFilterUtils.trueFileFilter();
-        List<File> list = (List<File>) FileUtils.listFiles(parentFile, fileFilter,null) ;
+        File[] files = parentFile.listFiles(new EndWithFileFilter(fileEnd)) ;
         //注册文件
-        fileCenter.registe(list,markMap);
+        fileCenter.registe(files);
     }
 }
