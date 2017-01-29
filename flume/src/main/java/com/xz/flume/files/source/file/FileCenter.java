@@ -65,6 +65,7 @@ public class FileCenter {
                     markInfo = new MarkInfo(absolutePath,metaFileMeta) ;
                 }
                 FileInfo fileInfo = new FileInfo(file.getName(), absolutePath, file.getParent(), file, markInfo);
+                System.out.println("deal:"+absolutePath);
                 map.put(absolutePath, fileInfo);
                 list.add(fileInfo) ;
                 if (logger.isDebugEnabled()) {
@@ -126,15 +127,21 @@ public class FileCenter {
             System.out.println(now + "--" + fileInfo.getFile().lastModified() + "--" + timeLimit);
             //超时
             if (fileInfo.getState()== FileInfo.FileInfoState.NORMAL_NODATA && now - fileInfo.getFile().lastModified() > timeLimit) {
+                lock.lock();
+                try {
+                    //设置文件状态为关闭 释放连接
+                    fileInfo.setState(FileInfo.FileInfoState.CLOSE);
+                    fileInfo.release();
 
-                //设置文件状态为关闭 释放连接
-                fileInfo.setState(FileInfo.FileInfoState.CLOSE);
-                fileInfo.release();
+                    map.remove(fileInfo.getAbsolutePath());
+                    list.remove(fileInfo) ;
+                    fileInfo.getMarkInfo().delete();
 
-                map.remove(fileInfo.getAbsolutePath());
-                list.remove(fileInfo) ;
+                    removelist.add(fileInfo);
+                }finally {
+                    lock.unlock();
+                }
 
-                removelist.add(fileInfo);
             }
         }
         System.out.println("--------------");

@@ -48,7 +48,7 @@ public class MarkInfo {
     public MarkInfo(String srcPath,String targetPath, int num, long offset) {
         this.srcPath = srcPath;
         this.targetPath = targetPath;
-        targetfile = new File(this.targetPath) ;
+        targetfile = new File(this.targetPath+".meta") ;
         this.num = new AtomicInteger(num);
         this.offset = new AtomicLong(offset);
     }
@@ -65,6 +65,11 @@ public class MarkInfo {
     public void autoIncrement(long offset){
         num.incrementAndGet() ;
         this.offset.addAndGet(offset+1) ;
+    }
+    public void delete(){
+        if (targetfile.exists()){
+            targetfile.delete() ;
+        }
     }
 
     @Override

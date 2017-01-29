@@ -12,5 +12,7 @@ kill -9 `jps -l | grep org.apache.flume.node.Application | awk '{print $1}'`
 /hadoop/flume/flume-1.6.0/bin/flume-ng agent --conf /hadoop/flume/flume-1.6.0/conf/ --conf-file /hadoop/flume/flume-1.6.0/conf/xz/demo1.properties -n demo1
 
 #demo2
-/hadoop/flume/flume-1.6.0/bin/flume-ng agent --conf /hadoop/flume/flume-1.6.0/conf/ --conf-file /hadoop/flume/flume-1.6.0/conf/xz/demo2.properties -n demo2
+/hadoop/flume/flume-1.6.0/bin/flume-ng agent --conf /hadoop/flume/flume-1.6.0/conf/ --conf-file /hadoop/flume/flume-1.6.0/conf/xz/demo2.properties -n demo2 -Dflume.monitoring.type=com.xz.flume.instrumentation.RpcServer -Dflume.monitoring.zookeeper=192.168.211.137
 
+#demo3
+/hadoop/flume/flume-1.6.0/bin/flume-ng agent --conf /hadoop/flume/flume-1.6.0/conf/ --conf-file /hadoop/flume/flume-1.6.0/conf/xz/demo3.properties -n demo3 -Dflume.monitoring.type=com.xz.flume.instrumentation.RpcServer -Dflume.monitoring.zookeeper=192.168.211.137

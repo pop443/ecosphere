@@ -35,6 +35,7 @@ public class FileSource extends BaseSource {
 	public void configure(Context context) {
 		super.configure(context);
 
+		fileCounter = new FileCounter("cust-flume") ;
 		sourceName = globalContext.get("sourceName");
 		//读取文件的主路径
 		String read = globalContext.get("read");
