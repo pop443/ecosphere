@@ -29,6 +29,7 @@ public class FileSource extends BaseSource {
 	private MoveFileTask moveFileTask ;
 	/** 统计 */
 	private FileCounter fileCounter ;
+	private int batchNum ;
 
 	@Override
 	public void configure(Context context) {
@@ -50,6 +51,7 @@ public class FileSource extends BaseSource {
 		markFileTask = new MarkFileTask(metaPath,fileCenter) ;
 		moveFileTask = new MoveFileTask(movePath,fileCenter) ;
 
+		batchNum = Integer.parseInt(globalContext.get("batchNum")) ;
 	}
 	private void validate(String  parentPath){
 		File parentFile = new File(parentPath) ;
@@ -104,18 +106,16 @@ public class FileSource extends BaseSource {
 		Status status = null;
 		List<Event> events = null ;
 		try {
-			events = FileReaderUtil.readFiles(fileCenter);
+			events = FileReaderUtil.readFiles(fileCenter,batchNum);
 			if (events.size()==0){
-				Thread.sleep(500);
 				return Status.READY ;
 			}
+			fileCounter.addToEventReceivedCount(events.size()) ;
 			getChannelProcessor().processEventBatch(events);
 			status = Status.READY ;
 		} catch (IOException e) {
 			e.printStackTrace();
 			status = Status.BACKOFF ;
-		} catch (InterruptedException e){
-			status = Status.READY ;
 		}
 		return status;
 	}

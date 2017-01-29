@@ -115,6 +115,10 @@ public class FileInfo {
 		this.state = state;
 	}
 
+	public FileInfoState getState() {
+		return state;
+	}
+
 	enum FileInfoState {
 
 		/**

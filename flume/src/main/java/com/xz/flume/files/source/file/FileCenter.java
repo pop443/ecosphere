@@ -21,6 +21,7 @@ public class FileCenter {
     private Map<String, FileInfo> map = new HashMap<>();
     private List<FileInfo> list = new ArrayList<>();
     private Lock lock = new ReentrantLock();
+    private int index = 0 ;
 
     private FileCenter() {
 
@@ -80,12 +81,23 @@ public class FileCenter {
      *
      * @return
      */
-    public Map<FileInfo, String> readLine() {
-        Map<FileInfo, String> ret = new HashMap<>();
-        for (FileInfo fileInfo : map.values()) {
-            ret.put(fileInfo, fileInfo.readLine());
+    public void readLine(Map<FileInfo, String> map ,int batchNu) {
+        lock.lock();
+        try{
+            if (list.size()<1){
+                return ;
+            }
+            for (int i = 0 ; i<batchNu;i++){
+                if (index>=list.size()){
+                    index = 0 ;
+                }
+                FileInfo fileInfo = list.get(index);
+                map.put(fileInfo, fileInfo.readLine());
+                index++ ;
+            }
+        }finally {
+            lock.unlock();
         }
-        return ret;
     }
 
     public boolean markFile() {
@@ -113,7 +125,7 @@ public class FileCenter {
         for (FileInfo fileInfo : map.values()) {
             System.out.println(now + "--" + fileInfo.getFile().lastModified() + "--" + timeLimit);
             //超时
-            if (now - fileInfo.getFile().lastModified() > timeLimit) {
+            if (fileInfo.getState()== FileInfo.FileInfoState.NORMAL_NODATA && now - fileInfo.getFile().lastModified() > timeLimit) {
 
                 //设置文件状态为关闭 释放连接
                 fileInfo.setState(FileInfo.FileInfoState.CLOSE);
