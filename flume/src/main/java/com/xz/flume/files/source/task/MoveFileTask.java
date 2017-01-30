@@ -19,25 +19,20 @@ public class MoveFileTask implements Runnable {
     private FileCenter fileCenter ;
     /** 迁移文件的路径 */
     private String targetPath ;
-    private List<FileInfo> list ;
     private long timeLimit = 1000*10 ;
 
     public MoveFileTask(String targetPath,FileCenter fileCenter) {
         this.fileCenter = fileCenter;
         this.targetPath = targetPath;
-        list = new ArrayList<>() ;
 
     }
 
     @Override
     public void run() {
-        list.clear();
-        fileCenter.moveFile(list,timeLimit);
-        for (FileInfo fileInfo:list) {
-            String targetPath = this.targetPath+"/"+fileInfo.getName() ;
-            File target = new File(targetPath) ;
-            boolean bo = FileUtil.move(fileInfo.getFile(),target);
-            logger.info(fileInfo.getAbsolutePath()+"--move--"+target.getAbsolutePath()+":"+bo);
+        try{
+            fileCenter.moveFile(timeLimit,this.targetPath);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
         }
     }
 }

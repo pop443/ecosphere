@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.xz.flume.files.counter.FileCounter;
 import com.xz.flume.files.source.plat.BaseSource;
-import com.xz.flume.files.source.task.MarkFileTask;
+import com.xz.flume.files.source.task.MetaFileTask;
 import com.xz.flume.files.source.task.MoveFileTask;
 import com.xz.flume.files.source.task.ScanFolderTask;
 import com.xz.flume.files.source.utils.FileUtil;
@@ -24,7 +24,7 @@ public class FileSource extends BaseSource {
 	/** 扫描文件线程 */
 	private ScanFolderTask scanFolderTask;
 	/** 持久化文件线程 */
-	private MarkFileTask markFileTask ;
+	private MetaFileTask markFileTask ;
 	/** 迁移文件线程 */
 	private MoveFileTask moveFileTask ;
 	/** 统计 */
@@ -49,7 +49,7 @@ public class FileSource extends BaseSource {
 		//文件扫描线程参数
 		String fileEnd = globalContext.get("fileEnd") ;
 		scanFolderTask = new ScanFolderTask(read, fileCenter,fileEnd) ;
-		markFileTask = new MarkFileTask(metaPath,fileCenter) ;
+		markFileTask = new MetaFileTask(metaPath,fileCenter) ;
 		moveFileTask = new MoveFileTask(movePath,fileCenter) ;
 
 		batchNum = Integer.parseInt(globalContext.get("batchNum")) ;

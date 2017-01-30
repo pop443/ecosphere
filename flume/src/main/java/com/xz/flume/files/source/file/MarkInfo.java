@@ -52,8 +52,6 @@ public class MarkInfo {
         this.num = new AtomicInteger(num);
         this.offset = new AtomicLong(offset);
     }
-
-
     public int getNum() {
         return num.get();
     }
@@ -66,10 +64,12 @@ public class MarkInfo {
         num.incrementAndGet() ;
         this.offset.addAndGet(offset+1) ;
     }
-    public void delete(){
+    public boolean delete(){
         if (targetfile.exists()){
             targetfile.delete() ;
+            return true ;
         }
+        return false ;
     }
 
     @Override

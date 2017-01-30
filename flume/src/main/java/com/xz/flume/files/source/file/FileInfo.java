@@ -29,6 +29,7 @@ public class FileInfo {
 		this.createTime = System.currentTimeMillis() ;
 		try {
 			lineNumberReader = new LineNumberReader(new InputStreamReader(new FileInputStream(absolutePath), "utf-8"));
+			state = FileInfoState.NORMAL;
 		} catch (UnsupportedEncodingException e) {
 			state = FileInfoState.EXCEPTION;
 			logger.error(e.getMessage());

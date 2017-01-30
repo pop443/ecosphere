@@ -15,9 +15,9 @@ import java.util.Map;
  * 由总路径+/meta路径+/mark.xz
  * 只读取一次，之后根据间隔写入
  */
-public class MarkFileTask implements Runnable{
+public class MetaFileTask implements Runnable{
 
-    private static final Logger logger = LoggerFactory.getLogger(MarkFileTask.class);
+    private static final Logger logger = LoggerFactory.getLogger(MetaFileTask.class);
     private String metaParentPath;
     private FileCenter fileCenter ;
     /** 内存中的持久化数据 */
@@ -28,14 +28,14 @@ public class MarkFileTask implements Runnable{
      * @param path -- 总路径+/meta路径
      * @param fileCenter
      */
-    public MarkFileTask(String path, FileCenter fileCenter) {
+    public MetaFileTask(String path, FileCenter fileCenter) {
         metaParentPath = path ;
         this.fileCenter = fileCenter;
         readFileMarkInfo();
     }
 
     /**
-     * 读取持久化文件
+     * 读取持久化 .meta 文件
      */
     private void readFileMarkInfo() {
         File metaFile = new File(metaParentPath) ;
@@ -56,6 +56,10 @@ public class MarkFileTask implements Runnable{
 
     @Override
     public void run() {
-        writeFileMarkInfo();
+        try{
+            writeFileMarkInfo();
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 }

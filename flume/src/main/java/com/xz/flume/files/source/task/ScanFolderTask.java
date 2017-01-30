@@ -38,6 +38,10 @@ public class ScanFolderTask implements Runnable{
         // 获取文件夹 下的文件
         File[] files = parentFile.listFiles(new EndWithFileFilter(fileEnd)) ;
         //注册文件
-        fileCenter.registe(files);
+        try{
+            fileCenter.registe(files);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 }
