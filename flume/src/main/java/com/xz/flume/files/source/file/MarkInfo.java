@@ -1,6 +1,7 @@
 package com.xz.flume.files.source.file;
 
 import com.xz.flume.files.source.utils.FileUtil;
+import com.xz.flume.files.source.utils.StringUtil;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -30,6 +31,7 @@ public class MarkInfo {
     public MarkInfo(File targetfile) {
         try {
             String s = FileUtils.readFileToString(targetfile) ;
+            s = StringUtil.replaceBlank(s) ;
             String[] strings = equalPattern.split(s) ;
             srcPath = strings[0] ;
             targetPath = targetfile.getAbsolutePath() ;
