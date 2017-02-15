@@ -38,6 +38,7 @@
         <module>zookeeper</module>
         <module>flume</module>
         <module>kylin</module>
+        <module>elasticsearch</module>
     </modules>
 
     <dependencies>
