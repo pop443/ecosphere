@@ -23,7 +23,7 @@
 <configuration>
 		<property>
                 <name>hbase.master</name>
-                <value>vggapp19:60000</value>
+                <value>vggapp29:60000</value>
         </property>
         <property>
                 <name>hbase.master.port</name>
@@ -31,7 +31,7 @@
         </property>
         <property>
                 <name>hbase.rootdir</name>
-                <value>hdfs://vggapp29:8020/apps/hbase/data</value>
+                <value>hdfs://vggapp19:8020/apps/hbase/data</value>
         </property>
 		<property>
 			<name>zookeeper.znode.parent</name>
