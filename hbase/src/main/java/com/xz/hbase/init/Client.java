@@ -49,7 +49,7 @@ public class Client {
 			partitions[2] = Bytes.toBytes("15000-20110505121212");
 			partitions[3] = Bytes.toBytes("17000-20140505121212");
 			partitions[4] = Bytes.toBytes("19000-20180505121212");
-			
+
 			admin.createTable(table, partitions);
 			bo = true ;
 		} catch (IOException e) {
