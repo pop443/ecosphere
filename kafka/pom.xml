@@ -12,7 +12,7 @@
     <artifactId>kafka</artifactId>
     <packaging>pom</packaging>
    <properties>
-        <kafka-version>0.9.0.0</kafka-version>
+        <kafka-version>0.10.1.1</kafka-version>
     </properties>
     <dependencies>
         <dependency>
@@ -36,7 +36,7 @@
             <artifactId>kafka-clients</artifactId>
             <version>${kafka-version}</version>
         </dependency>
-        <!--<dependency>
+        <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-streams</artifactId>
             <version>${kafka-version}</version>
@@ -46,6 +46,7 @@
             <artifactId>connect-api</artifactId>
             <version>${kafka-version}</version>
         </dependency>
+        <!--
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>connect-json</artifactId>

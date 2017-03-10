@@ -75,11 +75,11 @@
             <version>${hbase-version}</version>
         </dependency>
         <!-- phoenix -->
-        <dependency>
+        <!--<dependency>
             <groupId>org.apache.phoenix</groupId>
             <artifactId>phoenix</artifactId>
             <version>${phoenix-version}</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.apache.phoenix</groupId>
             <artifactId>phoenix-core</artifactId>
@@ -90,11 +90,11 @@
             <artifactId>phoenix-flume</artifactId>
             <version>${phoenix-version}</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>org.apache.phoenix</groupId>
             <artifactId>phoenix-queryserver-client</artifactId>
             <version>${phoenix-version}</version>
-        </dependency>
+        </dependency>-->
 
 
     </dependencies>

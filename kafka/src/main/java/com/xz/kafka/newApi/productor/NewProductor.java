@@ -21,7 +21,7 @@ public class NewProductor {
 		return properties;
 	}
 	public static void main(String[] args) {
-		for (int i = 0; i < 30; i++) {
+		for (int i = 0; i < 2; i++) {
 			Runnable r1 = new NewProductorTask(NewProductor.getConfig(), i) ;
 			Thread t1 = new Thread(r1) ;
 			t1.start();

@@ -39,6 +39,7 @@
         <module>flume</module>
         <module>kylin</module>
         <module>elasticsearch</module>
+        <module>jstorm</module>
     </modules>
 
     <dependencies>
