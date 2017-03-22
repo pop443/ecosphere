@@ -1,72 +1,40 @@
 package com.xz.jstorm.demo.wordcount1;
 
-import java.io.*;
-import java.util.*;
-
 import backtype.storm.spout.SpoutOutputCollector;
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.topology.base.BaseRichSpout;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
-import shade.storm.org.apache.commons.io.FileUtils;
-import shade.storm.org.apache.commons.io.filefilter.FileFilterUtils;
-import shade.storm.org.apache.commons.io.filefilter.IOFileFilter;
+import backtype.storm.utils.Utils;
+
+import java.util.Map;
+import java.util.Random;
 
 /**
  * falcon -- 2017/3/19.
  */
-public class WordCountSpout extends BaseRichSpout{
-
-    private static final long serialVersionUID = 1L;
-
-    private SpoutOutputCollector collector;
-    private List<LineNumberReader> readers = null ;
-    private int index = 0 ;
-
-    @Override
-    public void nextTuple() {
-        if (index==readers.size()){
-            index = 0 ;
-        }
-        try {
-            LineNumberReader lnr = readers.get(index) ;
-            String line = lnr.readLine() ;
-            System.out.println(Thread.currentThread().getName()+line);
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            collector.emit(new Values(line)) ;
-            index++ ;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+public class WordCountSpout extends BaseRichSpout {
+    private SpoutOutputCollector _collector;
+    private Random _rand;
 
     @Override
     public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
-        //初始化
-        this.collector = collector ;
-        File parentFile = new File(Constant.IN) ;
-        IOFileFilter ioFileFilter = FileFilterUtils.notFileFilter(FileFilterUtils.suffixFileFilter(".bak")) ;
-        List<File> files = (List<File>)FileUtils.listFiles(parentFile, ioFileFilter, null) ;
-        readers = new ArrayList<>() ;
-        try {
-            for (File file:files) {
-                FileReader fr = new FileReader(file);
-                LineNumberReader lnr = new LineNumberReader(fr) ;
-                readers.add(lnr);
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        this._collector = collector;
+        this._rand = new Random();
+    }
+
+    @Override
+    public void nextTuple() {
+        Utils.sleep(100L);
+        String[] sentences = {"the cow jumped over the moon", "an apple a day keeps the doctor away", "four score and seven years ago", "snow white and the seven dwarfs", "i am at two with nature"};
+
+        String sentence = sentences[this._rand.nextInt(sentences.length)];
+        this._collector.emit(new Values(sentence));
     }
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields("line"));
+        declarer.declare(new Fields("word"));
     }
-
 }
