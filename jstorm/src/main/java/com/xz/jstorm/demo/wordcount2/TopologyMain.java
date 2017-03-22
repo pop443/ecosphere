@@ -1,4 +1,4 @@
-package com.xz.jstorm.demo.wordcount1;
+package com.xz.jstorm.demo.wordcount2;
 
 import backtype.storm.Config;
 import backtype.storm.LocalCluster;

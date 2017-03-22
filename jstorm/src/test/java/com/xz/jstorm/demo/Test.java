@@ -10,8 +10,8 @@ import java.util.Map;
  */
 public class Test {
     public static void main(String[] args) {
-        Integer count = null ;
-
-        System.out.println(count.intValue());
+        StringBuilder sb = new StringBuilder("word") ;
+        sb.reverse();
+        System.out.println(sb.toString());
     }
 }

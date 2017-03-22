@@ -1,27 +1,20 @@
-package com.xz.jstorm.demo.wordcount1;
+package com.xz.jstorm.demo.wordcount2;
 
-import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.BasicOutputCollector;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.topology.base.BaseBasicBolt;
 import backtype.storm.tuple.Tuple;
 
-import java.util.*;
-
 /**
  * falcon -- 2017/3/19.
  */
-public class CharCountBolt extends BaseBasicBolt {
+public class WordCountWordBolt extends BaseBasicBolt {
+    private static final long serialVersionUID = -1856555853843305970L;
 
-    private static final long serialVersionUID = 2659767638736897970L;
-
-    @Override
-    public void prepare(Map stormConf, TopologyContext context) {
-    }
 
     @Override
-    public void execute(Tuple input, BasicOutputCollector arg1) {
-        String line = input.getString(0) ;
+    public void execute(Tuple input, BasicOutputCollector collector) {
+        String line = input.getString(0);
         System.out.println(Thread.currentThread().getName()+line);
         try {
             Thread.sleep(1000);
@@ -33,4 +26,5 @@ public class CharCountBolt extends BaseBasicBolt {
     @Override
     public void declareOutputFields(OutputFieldsDeclarer arg0) {
     }
+
 }

@@ -1,4 +1,4 @@
-package com.xz.jstorm.demo.wordcount1;
+package com.xz.jstorm.demo.wordcount2;
 
 import backtype.storm.topology.BasicOutputCollector;
 import backtype.storm.topology.OutputFieldsDeclarer;

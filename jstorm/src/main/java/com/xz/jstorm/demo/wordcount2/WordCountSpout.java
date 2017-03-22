@@ -1,4 +1,4 @@
-package com.xz.jstorm.demo.wordcount1;
+package com.xz.jstorm.demo.wordcount2;
 
 import backtype.storm.spout.SpoutOutputCollector;
 import backtype.storm.task.TopologyContext;
