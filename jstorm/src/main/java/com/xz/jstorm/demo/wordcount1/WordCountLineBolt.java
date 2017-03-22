@@ -1,4 +1,4 @@
-package com.xz.jstorm.demo.wordcount;
+package com.xz.jstorm.demo.wordcount1;
 
 import backtype.storm.topology.BasicOutputCollector;
 import backtype.storm.topology.OutputFieldsDeclarer;
@@ -6,7 +6,6 @@ import backtype.storm.topology.base.BaseBasicBolt;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
-import shade.storm.org.apache.commons.lang.StringUtils;
 
 /**
  * falcon -- 2017/3/19.
@@ -17,13 +16,14 @@ public class WordCountLineBolt extends BaseBasicBolt {
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {
         String line = input.getString(0);
-        String[] words = line.split(" ");
-        for (int i = 0; i < words.length; i++) {
-            String word = words[i].trim();
-            if (StringUtils.isNotBlank(word)) {
-                collector.emit(new Values(word.toLowerCase()));
-            }
+
+        System.out.println(Thread.currentThread().getName()+line);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+        collector.emit(new Values(line));
     }
 
     @Override
