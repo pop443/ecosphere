@@ -1,11 +1,15 @@
 package com.xz.kafka.mbean;
 
+import com.yammer.metrics.reporting.JmxReporter;
+
 import javax.management.*;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,22 +32,57 @@ public class Manager {
 
             // 把所有Domain都打印出来
             //printAllDomains(mbsc);
-            getKafkaServerInfo(mbsc) ;
+            //getMinFetchRate(mbsc) ;
+            getMessagesInPerSec(mbsc) ;
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static void getKafkaServerInfo(MBeanServerConnection mbsc) {
+    private static void getMinFetchRate(MBeanServerConnection mbsc) {
         try {
-            ObjectName objectName = new ObjectName("kafka.server:type=BrokerTopicMetrics,name=BytesInPerSec") ;
+            ObjectName objectName = new ObjectName("kafka.server:type=ReplicaFetcherManager,name=MinFetchRate,clientId=Replica") ;
             MBeanInfo mbeanInfo = mbsc.getMBeanInfo(objectName) ;
-            System.out.println(mbeanInfo);
+            MBeanAttributeInfo[] mBeanAttributeInfos = mbeanInfo.getAttributes() ;
+            for (MBeanAttributeInfo mBeanAttributeInfo :mBeanAttributeInfos) {
+                System.out.println(mBeanAttributeInfo.toString());
+            }
+            JmxReporter.GaugeMBean gaugeMBean = MBeanServerInvocationHandler.newProxyInstance(mbsc,objectName, JmxReporter.GaugeMBean.class,true) ;
+            Object o = gaugeMBean.getValue() ;
+            System.out.println(o);
         } catch (MalformedObjectNameException e) {
             e.printStackTrace();
         } catch (InstanceNotFoundException e) {
             e.printStackTrace();
         } catch (IntrospectionException e) {
+            e.printStackTrace();
+        } catch (ReflectionException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void getMessagesInPerSec(MBeanServerConnection mbsc) {
+        try {
+            ObjectName objectName = new ObjectName("kafka.server:type=BrokerTopicMetrics,name=MessagesInPerSec") ;
+            AttributeList attributeList = mbsc.getAttributes(objectName,new String[]{"Count", "FifteenMinuteRate", "FiveMinuteRate", "OneMinuteRate", "MeanRate"}) ;
+            List<Attribute> list = attributeList.asList() ;
+            for (Attribute attribute:list) {
+                Object o = attribute.getValue() ;
+                String name = attribute.getName() ;
+                if (o.getClass()==Long.class){
+                    BigDecimal bigDecimal = new BigDecimal((Long)o) ;
+                    System.out.println(name+":"+bigDecimal.toString());
+                }
+                if (o.getClass()==Double.class){
+                    BigDecimal bigDecimal = new BigDecimal((Double)o) ;
+                    System.out.println(name+":"+bigDecimal.toString());
+                }
+            }
+        } catch (MalformedObjectNameException e) {
+            e.printStackTrace();
+        } catch (InstanceNotFoundException e) {
             e.printStackTrace();
         } catch (ReflectionException e) {
             e.printStackTrace();
