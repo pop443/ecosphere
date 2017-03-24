@@ -28,8 +28,8 @@ public class HighConsumer {
 
     public static void main(String[] args) {
         ConsumerConnector consumer = Consumer.createJavaConsumerConnector(new ConsumerConfig(HighConsumer.getConfig()));
-        int num = 2;
-        String topic = "testreset2";
+        int num = 1;
+        String topic = KafkaConf.getTopic();
         Map<String, Integer> topicCountMap = new HashMap<>();
         topicCountMap.put(topic, new Integer(num));
         Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap = consumer.createMessageStreams(topicCountMap);

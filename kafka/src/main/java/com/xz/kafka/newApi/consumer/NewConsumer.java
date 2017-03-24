@@ -33,7 +33,7 @@ public class NewConsumer {
 
 	public static void main(String[] args) {
 		consumer = new KafkaConsumer<>(NewConsumer.getConfig());
-		String topic = "test2" ;
+		String topic = KafkaConf.getTopic() ;
 		consumer.subscribe(Arrays.asList(topic));
 		List<PartitionInfo> partitionInfos = consumer.listTopics().get(topic);
 		System.out.println("分区数量"+partitionInfos.size());
