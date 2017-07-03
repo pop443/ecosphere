@@ -1,9 +1,9 @@
-package com.xz.kafka.newApi.productor;
-
-import java.util.Properties;
+package com.xz.kafka.newApi.sasl.productor;
 
 import com.xz.kafka.conf.KafkaConf;
 import org.apache.kafka.clients.producer.ProducerConfig;
+
+import java.util.Properties;
 
 public class NewProductor {
 	public static Properties getConfig() {

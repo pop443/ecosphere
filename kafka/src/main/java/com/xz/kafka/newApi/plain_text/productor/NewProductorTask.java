@@ -1,21 +1,25 @@
-package com.xz.kafka.newApi.productor;
-
-import com.xz.kafka.conf.KafkaConf;
-import org.apache.kafka.clients.producer.*;
+package com.xz.kafka.newApi.plain_text.productor;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 import java.util.Random;
 
-public class NewProductorTaskTest implements Runnable {
+import com.xz.kafka.conf.KafkaConf;
+import org.apache.kafka.clients.producer.Callback;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
+
+public class NewProductorTask implements Runnable {
 	private Properties properties;
 	private int num;
 	private long time = 946656000000l ;
 	private Random rp1 = new Random() ;
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss") ;
 
-	public NewProductorTaskTest(Properties properties, int num) {
+	public NewProductorTask(Properties properties, int num) {
 		this.properties = properties;
 		this.num = num;
 	}
@@ -28,9 +32,9 @@ public class NewProductorTaskTest implements Runnable {
 			//key = value = 10000_20000101000000  19999_20200101000000
 			String rowkey = this.getRowkey() ;
 			String key = rowkey ;
-			String value = i+"" ;
-			System.out.println(value);
-			producer.send(new ProducerRecord<>("testreset2", key,
+			String value = rowkey+","+this.getcf()+","+this.getcf() ;
+//			System.out.println(value);
+			producer.send(new ProducerRecord<>(KafkaConf.getTopic(), key,
 					value), new Callback() {
 
 				@Override
@@ -43,12 +47,6 @@ public class NewProductorTaskTest implements Runnable {
 							+ metadata.offset());*/
 				}
 			});
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			i++;
 			producer.flush();
 		}
 		producer.close();

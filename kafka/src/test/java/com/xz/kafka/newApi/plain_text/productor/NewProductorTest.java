@@ -1,4 +1,4 @@
-package com.xz.kafka.newApi.productor;
+package com.xz.kafka.newApi.plain_text.productor;
 
 import com.xz.kafka.conf.KafkaConf;
 import org.apache.kafka.clients.producer.ProducerConfig;

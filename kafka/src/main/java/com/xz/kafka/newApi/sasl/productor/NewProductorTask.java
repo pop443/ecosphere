@@ -1,16 +1,12 @@
-package com.xz.kafka.newApi.productor;
+package com.xz.kafka.newApi.sasl.productor;
+
+import com.xz.kafka.conf.KafkaConf;
+import org.apache.kafka.clients.producer.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 import java.util.Random;
-
-import com.xz.kafka.conf.KafkaConf;
-import org.apache.kafka.clients.producer.Callback;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.Producer;
-import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.clients.producer.RecordMetadata;
 
 public class NewProductorTask implements Runnable {
 	private Properties properties;
@@ -42,9 +38,6 @@ public class NewProductorTask implements Runnable {
 					if (e != null) {
 						e.printStackTrace();
 					}
-					/*System.out.println("Thread num:" + num
-							+ "---partition:"+metadata.partition()+",offset: "
-							+ metadata.offset());*/
 				}
 			});
 			producer.flush();

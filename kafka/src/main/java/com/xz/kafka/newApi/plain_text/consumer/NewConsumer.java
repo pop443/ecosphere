@@ -1,4 +1,4 @@
-package com.xz.kafka.newApi.consumer;
+package com.xz.kafka.newApi.plain_text.consumer;
 
 import java.util.Arrays;
 import java.util.List;
@@ -7,7 +7,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.xz.kafka.conf.KafkaConf;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.PartitionInfo;
 
