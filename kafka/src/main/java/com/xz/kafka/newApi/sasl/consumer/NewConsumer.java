@@ -14,7 +14,7 @@ public class NewConsumer {
 
 	/*
 	java -cp :/usr/lib/kafka/libs/*:/xz/test/kafka.jar
-	-Djava.security.auth.login.config=/etc/kafka/conf/kafka_client_jaas.conf
+	-Djava.security.auth.login.com.xz.spark.learn.config=/etc/kafka/conf/kafka_client_jaas.conf
 	-Djava.security.krb5.conf=/etc/krb5.conf
 	com.xz.kafka.newApi.sasl.consumer.NewConsumer
 	*/

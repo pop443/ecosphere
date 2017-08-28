@@ -8,8 +8,8 @@ import java.util.Properties;
  * Created by xz on 2016/10/10.
  */
 public class KafkaConf {
-    //nohup /usr/lib/kafka-0.9.2/bin/kafka-server-start.sh /usr/lib/kafka-0.9.2/config/server.properties > /var/log/kafka/kafka_0.9.2.log  &
-    //nohup /hadoop/kafka-0.10.0.1/bin/kafka-server-start.sh /hadoop/kafka-0.10.0.1/config/server.properties > /hadoop/kafka-0.10.0.1/logs/kafka.log &
+    //nohup /usr/lib/kafka-0.9.2/bin/kafka-server-start.sh /usr/lib/kafka-0.9.2/com.xz.spark.learn.config/server.properties > /var/log/kafka/kafka_0.9.2.log  &
+    //nohup /hadoop/kafka-0.10.0.1/bin/kafka-server-start.sh /hadoop/kafka-0.10.0.1/com.xz.spark.learn.config/server.properties > /hadoop/kafka-0.10.0.1/logs/kafka.log &
     //kafka-topics.sh --create --zookeeper vggapp19:2181 --partitions 4 --replication-factor 1 --topic hbase
     private static String PATH = "config.properties" ;
     private static Properties properties = PropertiesUtil.getProperties(PATH) ;
