@@ -14,7 +14,7 @@
     <properties>
         <hbase-version>1.2.0-cdh5.7.1</hbase-version>
         <!--<phoenix-version>4.9.0-HBase-1.2</phoenix-version>-->
-        <phoenix-version>4.7.0-HBase-1.1</phoenix-version>
+        <phoenix-version>4.8.0-HBase-1.2</phoenix-version>
 
     </properties>
     <dependencies>
@@ -83,11 +83,6 @@
         <dependency>
             <groupId>org.apache.phoenix</groupId>
             <artifactId>phoenix-core</artifactId>
-            <version>${phoenix-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.phoenix</groupId>
-            <artifactId>phoenix-flume</artifactId>
             <version>${phoenix-version}</version>
         </dependency>
         <!--<dependency>
