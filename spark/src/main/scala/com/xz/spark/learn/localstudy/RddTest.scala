@@ -79,4 +79,25 @@ class TransationTest {
 
 case class User1(name: String, age: String)
 
-class User2 (name: String, age: String)
+class User2(val name1:String, val age1: String)  extends Serializable {
+  var name = name1
+  var age = age1
+
+  override def toString: String = {
+    "["+name+","+age+"]"
+  }
+  override def equals(obj: scala.Any): Boolean = {
+    if (obj == null){
+      return false
+    }
+    if(obj.getClass!=getClass){
+      return false
+    }
+    val user2 = obj.asInstanceOf[User2]
+    name.equals(user2.name) && age.equals(user2.age)
+  }
+
+  override def hashCode(): Int = {
+    (name+age).hashCode
+  }
+}
