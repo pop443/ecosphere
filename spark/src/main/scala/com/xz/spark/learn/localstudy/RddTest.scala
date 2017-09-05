@@ -16,8 +16,8 @@ object RddTest {
     //transationTest.transationFilter(sc)
     //transationTest.transationFlatMap(sc)
     //transationTest.transationDistinct1(sc)
-    transationTest.transationDistinct2(sc)
-    transationTest.transationDistinct3(sc)
+    //transationTest.transationDistinct2(sc)
+    //transationTest.transationDistinct3(sc)
   }
 }
 
@@ -48,7 +48,7 @@ class TransationTest {
       println(data)
     })
   }
-
+  //简单类型去重
   def transationDistinct1(sc: SparkContext): Unit = {
     val regex = Pattern.compile("_")
     val rdd1 = sc.makeRDD(Array("1", "1", "2", "3"), 2)
@@ -57,15 +57,15 @@ class TransationTest {
       println(data)
     })
   }
-
+  //case对象 去重
   def transationDistinct2(sc: SparkContext): Unit = {
-    val rdd1 = sc.makeRDD(Array(new User1("x1", "15"), new User1("x2", "16"), new User1("x1", "16"), new User1("x2", "15"), new User1("x1", "15")), 2)
+    val rdd1 = sc.makeRDD(Array(new User1("x1", "15"), new User1("x2", "16"), new User1("x1", "16"), new User1("x2", "15"), new User1("x1", "15")))
     val rdd2 = rdd1.distinct(2)
     rdd2.foreach(data => {
       println(data)
     })
   }
-
+  // 对象（需要序列化 重写equal和hashcode方法） 去重
   def transationDistinct3(sc: SparkContext): Unit = {
     val rdd1 = sc.makeRDD(Array(new User2("x1", "15"), new User2("x2", "16"), new User2("x1", "16"), new User2("x2", "15"), new User2("x1", "15")), 2)
     val rdd2 = rdd1.distinct(2)
@@ -84,20 +84,21 @@ class User2(val name1:String, val age1: String)  extends Serializable {
   var age = age1
 
   override def toString: String = {
-    "["+name+","+age+"]"
+    "User2("+name+","+age+")"
   }
-  override def equals(obj: scala.Any): Boolean = {
-    if (obj == null){
-      return false
-    }
-    if(obj.getClass!=getClass){
-      return false
-    }
-    val user2 = obj.asInstanceOf[User2]
-    name.equals(user2.name) && age.equals(user2.age)
+
+  def canEqual(other: Any): Boolean = other.isInstanceOf[User2]
+
+  override def equals(other: Any): Boolean = other match {
+    case that: User2 =>
+      (that canEqual this) &&
+        name1 == that.name1 &&
+        age1 == that.age1
+    case _ => false
   }
 
   override def hashCode(): Int = {
-    (name+age).hashCode
+    val state = Seq(name1, age1)
+    state.map(_.hashCode()).foldLeft(0)((a, b) => 31 * a + b)
   }
 }

@@ -7,7 +7,7 @@ import java.sql.*;
  */
 public class PhoenixConnectionUtil {
     private static  String driver = "org.apache.phoenix.jdbc.PhoenixDriver";
-    private static String url = "jdbc:phoenix:vggapp19,vggapp20,vggapp29";
+    private static String url = "jdbc:phoenix:bdapp133,bdapp134,bdapp135:/hbase-unsecure";
     static{
         try {
             Class.forName(driver);

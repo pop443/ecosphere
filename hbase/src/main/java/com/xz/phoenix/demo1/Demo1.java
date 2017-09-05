@@ -45,10 +45,10 @@ public class Demo1 {
         ResultSet rs = null ;
         try {
             conn = PhoenixConnectionUtil.getConnection();
-            pstm = conn.prepareStatement("select * from "+tableName);
+            pstm = conn.prepareStatement("select * from PHOENIX_TEST");
             rs = pstm.executeQuery() ;
             while (rs.next()){
-                for (int i = 0; i <=20 ; i++) {
+                for (int i = 0; i <=3 ; i++) {
                     System.out.print(rs.getString(i+1)+"--");
                 }
                 System.out.println("");
