@@ -1,6 +1,6 @@
 package com.xz.phoenix.demo1;
 
-import com.xz.phoenix.conf.PhoenixConnectionUtil;
+import com.xz.phoenix.utils.PhoenixConnectionUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,7 +10,7 @@ import java.sql.SQLException;
 /**
  * falcon -- 2017/2/23.
  */
-public class Demo1 {
+public class CreateTable {
     private String tableName = "\"hbase\"" ;
 
     public boolean createTable() {
@@ -48,7 +48,7 @@ public class Demo1 {
             pstm = conn.prepareStatement("select * from PHOENIX_TEST");
             rs = pstm.executeQuery() ;
             while (rs.next()){
-                for (int i = 0; i <=3 ; i++) {
+                for (int i = 0; i < 2 ; i++) {
                     System.out.print(rs.getString(i+1)+"--");
                 }
                 System.out.println("");
@@ -61,7 +61,7 @@ public class Demo1 {
     }
 
     public static void main(String[] args) {
-        Demo1 demo1 = new Demo1();
+        CreateTable demo1 = new CreateTable();
         //System.out.println(demo1.createTable());
         demo1.select1();
 

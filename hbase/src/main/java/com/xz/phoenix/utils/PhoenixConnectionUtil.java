@@ -1,4 +1,4 @@
-package com.xz.phoenix.conf;
+package com.xz.phoenix.utils;
 
 import java.sql.*;
 
@@ -7,7 +7,7 @@ import java.sql.*;
  */
 public class PhoenixConnectionUtil {
     private static  String driver = "org.apache.phoenix.jdbc.PhoenixDriver";
-    private static String url = "jdbc:phoenix:bdapp133,bdapp134,bdapp135:/hbase-unsecure";
+    private static String url = "jdbc:phoenix:xwtest1,xwtest2,xwtest3:/hbase-unsecure";
     static{
         try {
             Class.forName(driver);
