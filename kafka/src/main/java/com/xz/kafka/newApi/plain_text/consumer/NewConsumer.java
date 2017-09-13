@@ -22,7 +22,6 @@ public class NewConsumer {
 		Properties props = new Properties();
 		props.put("bootstrap.servers", KafkaConf.getBootstrapServers());
 		props.put("group.id", KafkaConf.getGroupId());
-
 		//auto.offset.reset 1.earliest 2.latest 3.none
 		props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
 		props.put("enable.auto.commit", KafkaConf.getKafkaCommit());
