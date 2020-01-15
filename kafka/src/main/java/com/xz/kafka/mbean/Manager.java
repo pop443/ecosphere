@@ -19,7 +19,7 @@ public class Manager {
     public static void main(String[] args) {
         try {
             JMXServiceURL url = new JMXServiceURL(
-                    "service:jmx:rmi:///jndi/rmi://172.32.149.129:10000/jmxrmi");
+                    "service:jmx:rmi:///jndi/rmi://172.32.148.245:9991/jmxrmi");
             Map<String,Object> map = new HashMap<>() ;
             map.put(JMXConnector.CREDENTIALS,new String[]{"root","root123."}) ;
             map.put("jmx.remote.x.request.waiting.timeout","3000") ;
@@ -31,8 +31,8 @@ public class Manager {
             MBeanServerConnection mbsc = jmxc.getMBeanServerConnection();
 
             // 把所有Domain都打印出来
-            //printAllDomains(mbsc);
-            //getMinFetchRate(mbsc) ;
+            printAllDomains(mbsc);
+            getMinFetchRate(mbsc) ;
             getMessagesInPerSec(mbsc) ;
         } catch (IOException e) {
             e.printStackTrace();

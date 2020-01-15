@@ -5,23 +5,36 @@ import kafka.admin.TopicCommand;
 import kafka.admin.TopicCommand.TopicCommandOptions;
 import kafka.utils.ZkUtils;
 
+import kafka.zk.KafkaZkClient;
+import kafka.zookeeper.ZooKeeperClient;
 import org.I0Itec.zkclient.ZkClient;
 import org.I0Itec.zkclient.ZkConnection;
+import org.apache.kafka.common.utils.SystemTime;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 public class Client {
-	private ZkUtils zkUtils = new ZkUtils(
-			new ZkClient(KafkaConf.getZookeeper()), new ZkConnection(
-					KafkaConf.getZookeeper()), true);
 
-	private void listTopic(){
+
+	private KafkaZkClient kafkaZkClient ;
+
+	@Before
+	public void before(){
+		ZooKeeperClient zooKeeperClient = new ZooKeeperClient(KafkaConf.getZookeeper(),30000,30000,30000,new SystemTime(),"","") ;
+		kafkaZkClient = new KafkaZkClient(zooKeeperClient,false,new SystemTime());
+	}
+	@Test
+	public void listTopic(){
 		String [] options = new String[]{
 				"--zookeeper",
 				KafkaConf.getZookeeper()
 		};
 		TopicCommandOptions topicCommandOptions = new TopicCommandOptions(options) ;
-		TopicCommand.listTopics(zkUtils, topicCommandOptions);
+		TopicCommand.listTopics(kafkaZkClient, topicCommandOptions);
 	}
-	private void createTopic(){
+	@Test
+	public void createTopic(){
 		String[] options = new String[]{
 				"--zookeeper",
 				KafkaConf.getZookeeper(),
@@ -33,10 +46,11 @@ public class Client {
 				"1"
 		};
 		TopicCommandOptions topicCommandOptions = new TopicCommandOptions(options) ;
-		TopicCommand.createTopic(zkUtils, topicCommandOptions);
+		TopicCommand.createTopic(kafkaZkClient, topicCommandOptions);
 	}
-	
-	private void deleteTopic(){
+
+	@Test
+	public void deleteTopic(){
 		String[] options = new String[]{
 				"--zookeeper",
 				KafkaConf.getZookeeper(),
@@ -44,14 +58,11 @@ public class Client {
 				KafkaConf.getTopic()
 		};
 		TopicCommandOptions topicCommandOptions = new TopicCommandOptions(options) ;
-		TopicCommand.deleteTopic(zkUtils, topicCommandOptions);
+		TopicCommand.deleteTopic(kafkaZkClient, topicCommandOptions);
 	}
 	
-	public static void main(String[] args) {
-		//错误 -- 未生成分区分文件夹
-		Client client = new Client() ;
-		client.deleteTopic();
-		//client.createTopic();
-		//client.listTopic();
+	@After
+	public void after(){
+		kafkaZkClient.close();
 	}
 }
