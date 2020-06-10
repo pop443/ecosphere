@@ -1,0 +1,10 @@
+查看topic
+kafka-topics.sh --list --zookeeper 172.32.148.245:2181
+创建topic
+kafka-topics.sh --create --zookeeper 172.32.148.245:2181 --replication-factor 1 --partitions 1 --topic ignite_topic
+
+
+console producer
+kafka-console-producer.sh --broker-list 172.32.148.245:9092,172.32.148.246:9092 --topic ignite_topic
+console consumer
+kafka-console-consumer.sh --bootstrap-server 172.32.148.245:9092,172.32.148.246:9092 --topic ignite_topic --from-beginning
