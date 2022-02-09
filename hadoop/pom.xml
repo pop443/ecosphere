@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
     <properties>
-        <hadoop-version>2.7.3</hadoop-version>
+        <hadoop-version>2.10.1</hadoop-version>
     </properties>
     <artifactId>hadoop</artifactId>
     <dependencies>
